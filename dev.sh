@@ -1,5 +1,5 @@
 oc new-project dev
-oc secrets new-sshauth  cloudfarm --ssh-privatekey=../ssh/ocp-handson
+oc secrets new-sshauth  cloudfarm --ssh-privatekey=./ssh/ocp-handson
 oc secrets link builder cloudfarm --for=pull
 oc import-image dotnet --from=registry.access.redhat.com/dotnet/dotnetcore-11-rhel7 --confirm
 until oc get istag dotnet:latest 2>/dev/null | grep -q latest ; do echo '-- waiting for initial imagestream to sync from upstream...' ; sleep 10s ; done
