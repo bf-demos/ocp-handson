@@ -1,7 +1,7 @@
 resource "aws_instance" "ocp" {
   count = "${var.instancecount}"
   ami           = "ami-061b1560"
-  instance_type = "m4.xlarge"
+  instance_type = "m4.2xlarge"
   subnet_id = "${element(module.vpc.public_subnets ,0)}"
   key_name = "ocp-handson"
   vpc_security_group_ids = ["${aws_security_group.ocp_inbound.id}","${aws_security_group.ocp_outbound.id}"]
@@ -91,15 +91,6 @@ resource "aws_security_group_rule" "ocp_outbound_01" {
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.ocp_outbound.id}"
-}
-
-data "aws_ami" "bf_rhel7_ebs" {
-  most_recent = true
-  owners = ["054714998694"]
-  filter {
-    name = "name"
-    values = ["bf-rhel-7*"]
-  }
 }
 
 output "ocp_public_ips" { value = ["${aws_eip.ocp.*.public_ip}"] }
