@@ -1,2 +1,1 @@
-# ocp-handson
-Hands on with OpenShift
+# Hands-On with OpenShift
