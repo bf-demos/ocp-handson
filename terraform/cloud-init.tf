@@ -20,10 +20,10 @@ data "template_file" "ocp_cloud_config" {
 yum -y update
 if grep -q CentOS /etc/redhat-release ; then
   yum -y install epel-release
-  yum -y install wget jq docker
+  yum -y install wget jq docker git
 	export CLOUD_USER="centos"
 else
-  yum -y  --enablerepo=* install wget jq docker
+  yum -y  --enablerepo=* install wget jq docker git
 	export CLOUD_USER="ec2-user"
 fi
 wget -qNP /tmp https://github.com$(curl -sL https://github.com/openshift/origin/releases/latest | grep openshift-origin-server | grep href | cut -d '<' -f 2- | cut -d '"' -f 2)
@@ -69,5 +69,8 @@ chown 1000.1000 /usr/local/etc/deploykey
 chmod go-rwx /usr/local/etc/deploykey
 test -d /home/${CLOUD_USER}/.ssh && cp /usr/local/etc/deploykey /home/${CLOUD_USER}/.ssh/id_rsa
 test -f /home/${CLOUD_USER}/.ssh/id_rsa && chown 1000.1000 /home/${CLOUD_USER}/.ssh/id_rsa
+cd /home/${CLOUD_USER}
+git clone https://github.com/bf-demos/ocp-handson
+chown -R 1000.1000 cd /home/${CLOUD_USER}
 EOF
 }

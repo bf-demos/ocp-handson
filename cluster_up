@@ -1,0 +1,5 @@
+#!/bin/bash
+sudo /usr/local/bin/cluster_up.sh
+oc login localhost:8443 --username=developer --password=developer --insecure-skip-tls-verify=true
+oc new app https://github.com/maci0/caddy-docker/
+
