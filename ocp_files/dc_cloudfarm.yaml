@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: cloudfarm
+  name: cloudfarm
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    name: cloudfarm
+  strategy:
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        name: cloudfarm
+    spec:
+      containers:
+      - env:
+        - name: ASPNETCORE_URLS
+          value: http://*:8080
+        image: cloudfarm
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: cloudfarm
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - cloudfarm
+      from:
+        kind: ImageStreamTag
+        name: cloudfarm:latest
+    type: ImageChange
+status: {}

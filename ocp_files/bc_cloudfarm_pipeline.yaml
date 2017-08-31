@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  creationTimestamp: null
+  name: cloudfarm-pipeline
+spec:
+  output: {}
+  postCommit: {}
+  resources: {}
+  runPolicy: SerialLatestOnly
+  source:
+    type: None
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfile: |
+        node('maven') {
+
+          stage ('build') {
+            openshiftBuild(namespace: 'dev', buildConfig: 'cloudfarm', showBuildLogs: 'true', checkForTriggeredDeployments: 'true')
+          }
+
+          stage ('deploy2dev') {
+            openshiftDeploy(namespace: 'dev', deploymentConfig: 'cloudfarm')
+            openshiftScale(namespace: 'dev', deploymentConfig: 'cloudfarm', replicaCount: 1)
+          }
+
+          stage ('ok2prod') {
+            input(message: 'Okay to prod', id: 'ok2prod')
+            openshiftTag(namespace: 'dev', srcStream: 'cloudfarm', srcTag: 'latest', destinationNamespace: 'dev', destStream: 'cloudfarm', destTag: 'readyforprod')
+            openshiftScale(namespace: 'dev', deploymentConfig: 'cloudfarm', replicaCount: 0)
+          }
+
+          stage ('release4prod') {
+            openshiftTag(namespace: 'dev', srcStream: 'cloudfarm', srcTag: 'readyforprod', destinationNamespace: 'prod', destStream: 'cloudfarm', destTag: 'latest')
+          }
+
+          stage ('deploy2prod') {
+            openshiftDeploy(namespace: 'prod', deploymentConfig: 'cloudfarm')
+          }
+          
+        }
+    type: JenkinsPipeline
+  triggers: []
+status:
+  lastVersion: 0

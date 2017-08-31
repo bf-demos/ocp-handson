@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ImageStream
+metadata:
+  creationTimestamp: null
+  generation: 1
+  name: cloudfarm
+  labels:
+    app: cloudfarm
+spec:
+status:
+  dockerImageRepository: ""
+

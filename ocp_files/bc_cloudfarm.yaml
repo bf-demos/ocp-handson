@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    app: cloudfarm
+  name: cloudfarm
+spec:
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: cloudfarm:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    contextDir: src/Cloudfarm.Web
+    git:
+      ref: bentterp-demo
+      uri: ssh://git@github.com/basefarm/cloudfarm.git
+    sourceSecret:
+      name: cloudfarm
+    type: Git
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: dotnet:latest
+    type: Source
+  triggers:
+  - github:
+      secret: ho7Q-v_R_62BeRd1cjCY
+    type: GitHub
+  - generic:
+      secret: 4qmkASP3JT4kz-ZlIWQ1
+    type: Generic
+  - imageChange: {}
+    type: ImageChange
+  - type: ConfigChange
+status:
+  lastVersion: 0
+

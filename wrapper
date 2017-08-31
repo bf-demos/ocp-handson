@@ -1,0 +1,7 @@
+#!/bin/bash
+
+while read f ; do
+  echo -en "\n# ${f}"
+  read -u 3
+  eval $f
+done 3<&0 < $*
