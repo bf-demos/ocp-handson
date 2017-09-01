@@ -1,5 +1,4 @@
 #!/bin/bash
 sudo /usr/local/bin/cluster_up.sh
 until oc login localhost:8443 --username=developer --password=developer --insecure-skip-tls-verify=true | grep -q "myproject" ; do sleep 5s ; done
-oc new-app https://github.com/maci0/caddy-docker/
 
