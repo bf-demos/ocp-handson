@@ -1,17 +1,26 @@
 # Hands-On with OpenShift
 
-( Figure out how to load the key, and get an IP address )
+Figure out how to load the key from this repo. And get an IP address.
 
-ssh -i ssh/ocp-handson centos@<IP>
-tail -f /var/log/cloud-init.loh
-  
-( Wait until you see "Cloud-Init finished, then CTRL-C )
+    ssh -i ssh/ocp-handson centos@<IP>  
 
-cd ocp-handson
-. cluster_up
+    cd ocp-handson  
+    ./cluster_up
 
-( Open the URL starting with "https://ec2-" in your browser and login as developer/developer )
+Open the URL starting with "https://ec2-" in your browser and login as developer/developer
 
-./wrapper dev.sh
-./wrapper prod.sh
-./wrapper cicd.sh
+    ./wrapper dev.sh  
+
+Step through the script, pressing ENTER to execute each line. Swap back and forth between the CLI and the GUI to see what happens in each step  
+
+    ./wrapper prod.sh  
+
+Notice how we don't re-build the container, but simply tag and deploy.
+
+    ./wrapper cicd.sh  
+
+Open Jenkins and login as developer/developer. Compare the pipeline in OpenShift (found under Builds, Pipelines) with the BlueOcean view in Jenkins.
+
+## Fast version for the impatient
+
+    cd ocp-handson ; ./cluster_up ; . dev.sh ; . prod.sh ; . cicd.sh

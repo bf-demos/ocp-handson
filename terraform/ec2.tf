@@ -1,7 +1,7 @@
 resource "aws_instance" "ocp" {
   count = "${var.instancecount}"
   ami           = "ami-061b1560"
-  instance_type = "m4.2xlarge"
+  instance_type = "m4.xlarge"
   root_block_device {
     volume_type = "gp2"
     volume_size = "50"
