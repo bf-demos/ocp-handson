@@ -2,16 +2,17 @@ data "template_cloudinit_config" "config" {
   gzip          = true
   base64_encode = true
 
-  # Setup hello world script to be called by the cloud-config
   part {
     content_type = "text/cloud-config"
     content      = "${data.template_file.ocp_write_files.rendered}"
   }
+
 	part {
     content_type = "text/x-shellscript"
     content      = "${data.template_file.ocp_cloud_config.rendered}"
   }
 }
+
 data "template_file" "ocp_write_files" {
   template = <<EOF
 write_files:
@@ -25,6 +26,7 @@ write_files:
     permissions: '0644'
 EOF
 }
+
 data "template_file" "ocp_cloud_config" {
   template = <<EOF
 #!/bin/bash
