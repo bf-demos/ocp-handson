@@ -4,16 +4,27 @@ data "template_cloudinit_config" "config" {
 
   # Setup hello world script to be called by the cloud-config
   part {
-    filename     = "ocp-handson"
     content_type = "text/cloud-config"
-    content      = "${file("../ssh/ocp-handson")}"
+    content      = "${data.template_file.ocp_write_files.rendered}"
   }
 	part {
     content_type = "text/x-shellscript"
     content      = "${data.template_file.ocp_cloud_config.rendered}"
   }
 }
-
+data "template_file" "ocp_write_files" {
+  template = <<EOF
+write_files:
+-   encoding: b64
+    content: ${base64encode(file("../ssh/ocp-handson"))}
+    path: /root/id_rsa
+    permissions: '0600'
+-   encoding: b64
+    content: ${base64encode(file("../ssh/ocp-handson.pub"))}
+    path: /root/id_rsa.pub
+    permissions: '0644'
+EOF
+}
 data "template_file" "ocp_cloud_config" {
   template = <<EOF
 #!/bin/bash
@@ -23,7 +34,10 @@ if grep -q CentOS /etc/redhat-release ; then
 	export CLOUD_USER="centos"
   cd /home/centos
   git clone https://github.com/bf-demos/ocp-handson
+  mkdir .ssh
+  mv /root/id_rsa* .ssh
   chown -R 1000.1000 /home/centos
+  ls -la /home/centos/.ssh
 else
   yum -y  --enablerepo=* install wget jq git
 	export CLOUD_USER="ec2-user"
