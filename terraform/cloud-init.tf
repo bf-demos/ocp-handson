@@ -1,4 +1,4 @@
-data "template_cloudinit_config" "config" {
+data "template_cloudinit_config" "ocp_userdata" {
   gzip          = true
   base64_encode = true
 
@@ -7,7 +7,7 @@ data "template_cloudinit_config" "config" {
     content      = "${data.template_file.ocp_write_files.rendered}"
   }
 
-	part {
+  part {
     content_type = "text/x-shellscript"
     content      = "${data.template_file.ocp_cloud_config.rendered}"
   }

@@ -5,7 +5,7 @@ resource "aws_instance" "ocp" {
   subnet_id              = "${element(module.vpc.public_subnets ,0)}"
   key_name               = "ocp-handson"
   vpc_security_group_ids = ["${aws_security_group.ocp_inbound.id}", "${aws_security_group.ocp_outbound.id}"]
-  user_data              = "${data.template_cloudinit_config.config.rendered}"
+  user_data              = "${data.template_cloudinit_config.ocp_userdata.rendered}"
 
   root_block_device {
     volume_type = "gp2"
