@@ -1,5 +1,5 @@
 #!/bin/bash
-until tail /var/log/cloud-init.log | grep -q " Cloud-init v. ..... finished at " ; do echo "Waiting 10 more seconds for cloud-init to finish..." ; sleep 10s ; done
+until tail /var/log/cloud-init-output.log | grep -q "Cloud-init v. ..... finished at " ; do echo "Waiting 10 more seconds for cloud-init to finish..." ; sleep 10s ; done
 sudo /usr/local/bin/cluster_up.sh
 until oc login localhost:8443 --username=developer --password=developer --insecure-skip-tls-verify=true | grep -q "myproject" ; do sleep 5s ; done
 

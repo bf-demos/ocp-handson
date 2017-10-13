@@ -1,6 +1,6 @@
 # Hands-On with OpenShift
 
-Figure out how to load the key from this repo. And get an IP address.
+Figure out how to load the key from this repo into your SSH key agent. And get an IP address for a testserver. The list of tsetserver IP addresses can be obtained with the `show_ips.sh` script in the `terraform` subfolder.
 
     ssh -i ssh/ocp-handson centos@<IP>  
 
