@@ -4,3 +4,8 @@
 
 # Module directory
 .terraform/
+
+# Temporary MS Office files
+~$*pptx
+~$*xlsx
+~$*docx
